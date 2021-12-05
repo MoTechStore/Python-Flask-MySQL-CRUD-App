@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSky</title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    
+<div class="container-fluid">
+<h1 class="text-center alert alert-danger">Python Flask CRUD Application</h1>
+        <div class="row">
+            <div class="col-sm-2"></div>
+
+            <!-- content goes here -->
+            <div class="col-sm-8">
+<h2 >Student List <button class="btn btn-primary float-right" data-toggle="modal" data-target="#myModal">Add Student</button></h2>
+
+{%with messages = get_flashed_messages()%}
+{%if messages%}
+{% for message in messages %}
+<div class="alert alert-success alert-dismissable" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    {{message}}
+</div>
+{%endfor%}
+{%endif%}
+{%endwith%}
+
+
+
+    <!-- Enter New Student Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+   
+                <div class="modal-header">
+                    <h5 class="modal-title text-primary" style="align-content: center;">Please Add New Student</h5>    
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  
+
+                <div class="modal-body">
+                    
+                    <form action="{{ url_for('insert')}}" method="POST">
+                        <div class="form-group">
+                          <label>Full Name</label>
+                          <input type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Enter Full Name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="text" name="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter Email">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input name="phone" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number">
+                          </div>
+
+                          <button type="submit" class="btn btn-primary mb-2">Save</button>
+                     
+                      </form>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- End of Enter New Student Modal -->
+
+
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">S/N</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in students %}
+        <tr>
+        <td>{{row.0}}</td>
+        <td>{{row.1}}</td>
+        <td>{{row.2}}</td>
+        <td>{{row.3}}</td>
+        <td>
+            <a href="/update/{{row.0}}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</a>
+            <a href="/delete/{{ row.0 }}" onclick="return confirm('Are Sure Want To Deleted ?')" class="btn btn-danger btn-sm">Delete</a>
+
+        </td>
+    </tr>
+
+
+        <!-- Enter New Student Modal -->
+        <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+       
+                    <div class="modal-header">
+                        <h5 class="modal-title text-primary" style="align-content: center;">Update Student Details</h5>    
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      
+    
+                    <div class="modal-body">
+                        
+                        <form action="{{ url_for('update')}}" method="POST">
+                            <input type="hidden" name="id" value="{{row.0}}">
+                            <div class="form-group">
+                              <label>Full Name</label>
+                              <input value="{{row.1}}" type="text" name="name" class="form-control" id="exampleFormControlInput1" placeholder="Enter Full Name">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input value="{{row.2}}" type="text" name="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter Email">
+                            </div>
+    
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input value="{{row.3}}" name="phone" type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Phone Number">
+                              </div>
+    
+                              <button type="submit" class="btn btn-success mb-2">Update</button>
+                         
+                          </form>
+    
+    
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    
+    
+        <!-- End of Edit Student Modal -->
+
+
+
+
+        {% endfor %}
+    </tbody>
+
+</table>
+            </div>
+            <!-- Content ends here-->
+
+
+            <div class="col-sm-2"></div>
+
+        </div>
+    </div>
+
+ <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>    
+</body>
+</html>
